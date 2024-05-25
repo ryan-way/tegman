@@ -28,3 +28,45 @@ resource "aws_rds_cluster" "tegmen_db" {
     min_capacity = 2
   }
 }
+
+data "aws_iam_policy_document" "tegmen_lambda_assume_role_policy" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role" "tegmen_lambda_role" {
+  name               = "tegmen_lambda_role"
+  assume_role_policy = data.aws_iam_policy_document.tegmen_lambda_assume_role_policy.json
+}
+
+data "archive_file" "temperature_lambda_archive_file" {
+  type        = "zip"
+  source_file = "../target/lambda/temperature_lambda/bootstrap"
+  output_path = "bootstrap.zip"
+}
+
+resource "aws_lambda_function" "tegman_lambda" {
+  # If the file is not in the current working directory you will need to include a
+  # path.module in the filename.
+
+  filename         = "bootstrap.zip"
+  function_name    = "temperature_lambda"
+  role             = aws_iam_role.tegmen_lambda_role.arn
+  source_code_hash = data.archive_file.temperature_lambda_archive_file.output_base64sha256
+  handler          = "bootstrap"
+  runtime          = "provided.al2023"
+
+  environment {
+    variables = {
+      foo = "bar"
+    }
+  }
+}

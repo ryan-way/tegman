@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "test_binary", "test_webserver",
+    "lambda",
 ]
 
 resolver = "2"

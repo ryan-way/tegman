@@ -17,3 +17,4 @@ Cargo.lock
 *.hcl
 *.tfstate
 *.backup
+*.info
