@@ -1,9 +1,10 @@
-use aws_lambda_events::apigw::ApiGatewayProxyResponse;
+use aws_lambda_events::apigw::{ApiGatewayProxyRequest, ApiGatewayProxyResponse};
 use http::HeaderMap;
 use lambda_runtime::{service_fn, Error, LambdaEvent};
-use serde_json::Value;
 
-async fn handler(event: LambdaEvent<Value>) -> Result<ApiGatewayProxyResponse, Error> {
+async fn handler(
+    event: LambdaEvent<ApiGatewayProxyRequest>,
+) -> Result<ApiGatewayProxyResponse, Error> {
     println!("This is an updated event");
     println!("This is an updated event: {:?}", event);
     let mut headers = HeaderMap::new();
