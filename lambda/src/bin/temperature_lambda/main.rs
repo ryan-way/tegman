@@ -5,8 +5,7 @@ use lambda_runtime::{service_fn, Error, LambdaEvent};
 async fn handler(
     event: LambdaEvent<ApiGatewayProxyRequest>,
 ) -> Result<ApiGatewayProxyResponse, Error> {
-    println!("This is an updated event");
-    println!("This is an updated event: {:?}", event);
+    println!("This is an event: {:?}", event);
     let mut headers = HeaderMap::new();
     headers.insert("content-type", "text/html".parse().unwrap());
     let resp = ApiGatewayProxyResponse {
