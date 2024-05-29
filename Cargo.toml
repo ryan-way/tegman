@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "lambda",
+    "lambda", "tegmen",
 ]
 
 resolver = "2"
