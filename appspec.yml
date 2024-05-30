@@ -1,0 +1,26 @@
+version: 0.0
+os: linux 
+files:
+  - source: /tegmen
+    destination: /root/tegmen
+# hooks:
+  # ApplicationStop:
+  #   - location: 
+  #     timeout:
+  #     runas:
+  # BeforeInstall:
+  #   - location: 
+  #     timeout:
+  #     runas: 
+  # AfterInstall:
+  #   - location:     
+  #     timeout: 
+  #     runas:
+  # ApplicationStart:
+  #   - location:     
+  #     timeout: 
+  #     runas:
+  # ValidateService:
+  #   - location:     
+  #     timeout: 
+  #     runas:
