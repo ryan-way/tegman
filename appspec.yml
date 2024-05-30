@@ -13,13 +13,8 @@ hooks:
   #     timeout:
   #     runas: 
   AfterInstall:
-    - location: /tegmen/scripts/hello.sh
-      timeout: 
-      runas:
-  # ApplicationStart:
-  #   - location:     
-  #     timeout: 
-  #     runas:
+    - location: tegmen/scripts/after_install.sh
+      runas: root
   # ValidateService:
   #   - location:     
   #     timeout: 
