@@ -3,7 +3,7 @@ os: linux
 files:
   - source: /tegmen
     destination: /root/tegmen
-# hooks:
+hooks:
   # ApplicationStop:
   #   - location: 
   #     timeout:
@@ -12,10 +12,10 @@ files:
   #   - location: 
   #     timeout:
   #     runas: 
-  # AfterInstall:
-  #   - location:     
-  #     timeout: 
-  #     runas:
+  AfterInstall:
+    - location: /tegmen/scripts/hello.sh
+      timeout: 
+      runas:
   # ApplicationStart:
   #   - location:     
   #     timeout: 
