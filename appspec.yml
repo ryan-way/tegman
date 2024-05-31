@@ -4,18 +4,6 @@ files:
   - source: /tegmen
     destination: /root/tegmen
 hooks:
-  # ApplicationStop:
-  #   - location: 
-  #     timeout:
-  #     runas:
-  # BeforeInstall:
-  #   - location: 
-  #     timeout:
-  #     runas: 
   AfterInstall:
     - location: tegmen/scripts/after_install.sh
       runas: root
-  # ValidateService:
-  #   - location:     
-  #     timeout: 
-  #     runas:
