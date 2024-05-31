@@ -65,3 +65,7 @@ resource "aws_cloudwatch_event_target" "event_bridge_target" {
   rule = aws_cloudwatch_event_rule.every_5_minutes.name
   arn  = module.system_controller.arn
 }
+
+module "codedeploy" {
+  source = "./codedeploy"
+}
