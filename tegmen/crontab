@@ -22,4 +22,3 @@
 #
 # m h  dom mon dow   command
 * * * * * /root/.cargo/bin/tegmen >> /var/log/tegmen/$(date +\%F-\%H).log
-* * * * * echo hello
