@@ -1,0 +1,2 @@
+[alias]
+bootstrap = "lambda build --bin system_controller --bin temperature_lambda"
