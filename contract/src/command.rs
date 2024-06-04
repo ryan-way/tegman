@@ -20,7 +20,7 @@ pub struct Temperature {
 }
 
 pub trait ListTemperaturesQuery: QueryContract<ListTemperatures> {
-    fn query(&self, command: ListTemperatures) -> Result<Self::Res>;
+    fn query(&self, command: Self::Req) -> Result<Self::Res>;
 }
 
 impl<T, C> QueryContract<C> for T
@@ -28,11 +28,12 @@ where
     T: ListTemperaturesQuery,
     C: Serialize + DeserializeOwned,
 {
+    type Req = ListTemperatures;
     type Res = Vec<Temperature>;
 }
 
 pub trait LogTemperatureMutation: MutationContract<LogTemperature> {
-    fn mutation(&self, command: LogTemperature) -> Result<Self::Res>;
+    fn mutation(&self, command: Self::Req) -> Result<Self::Res>;
 }
 
 impl<T, C> MutationContract<C> for T
@@ -40,5 +41,6 @@ where
     T: LogTemperatureMutation,
     C: Serialize + DeserializeOwned,
 {
+    type Req = LogTemperature;
     type Res = Temperature;
 }

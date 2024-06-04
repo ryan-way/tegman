@@ -28,6 +28,7 @@ pub trait QueryContract<C>
 where
     C: Serialize + DeserializeOwned,
 {
+    type Req: Serialize + DeserializeOwned;
     type Res: Serialize + DeserializeOwned;
 }
 
@@ -42,6 +43,7 @@ pub trait MutationContract<C>: Contract<Mutation, C>
 where
     C: Serialize + DeserializeOwned,
 {
+    type Req: Serialize + DeserializeOwned;
     type Res: Serialize + DeserializeOwned;
 }
 

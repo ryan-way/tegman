@@ -4,12 +4,12 @@ pub struct TestClient {}
 
 impl Client for TestClient {}
 impl LogTemperatureMutation for TestClient {
-    fn mutation(&self, command: LogTemperature) -> Result<Self::Res> {
+    fn mutation(&self, command: Self::Req) -> Result<Self::Res> {
         todo!()
     }
 }
 impl ListTemperaturesQuery for TestClient {
-    fn query(&self, command: ListTemperatures) -> Result<Self::Res> {
+    fn query(&self, command: Self::Req) -> Result<Self::Res> {
         todo!()
     }
 }
