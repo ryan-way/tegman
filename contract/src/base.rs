@@ -17,74 +17,35 @@ pub struct Payload<O: Operation, C> {
     command: C,
 }
 
-pub(crate) trait Sender {
-    fn send(data: &str) -> Result<String>;
-    fn serialize<T: Serialize>(data: &T) -> Result<String>;
-    fn deserialize<T: DeserializeOwned>(data: &str) -> Result<T>;
-}
-
-pub(crate) trait Contract<O, C, Res>: Sender
+pub(crate) trait Contract<O, C>
 where
     O: Operation + Serialize + DeserializeOwned,
     C: Serialize + DeserializeOwned,
-    Res: Serialize + DeserializeOwned,
 {
 }
 
-pub(crate) trait OperationContract<O, C, Res>: Contract<O, C, Res>
-where
-    O: Operation + Serialize + DeserializeOwned,
-    C: Serialize + DeserializeOwned,
-    Res: Serialize + DeserializeOwned,
-{
-    fn operation(&self, operation: O, command: C) -> Result<Res> {
-        let request = Payload { operation, command };
-
-        let request_data = Self::serialize(&request)?;
-        let respone_data = Self::send(&request_data)?;
-        let response: Res = Self::deserialize(&respone_data)?;
-
-        Ok(response)
-    }
-}
-
-impl<T, O, C, Res> Contract<O, C, Res> for T
-where
-    T: OperationContract<O, C, Res>,
-    O: Operation + Serialize + DeserializeOwned,
-    C: Serialize + DeserializeOwned,
-    Res: Serialize + DeserializeOwned,
-{
-}
-
-pub trait QueryContract<C>: OperationContract<Query, C, Self::Res>
+pub trait QueryContract<C>
 where
     C: Serialize + DeserializeOwned,
 {
     type Res: Serialize + DeserializeOwned;
-    fn query(&self, command: C) -> Result<Self::Res> {
-        self.operation(Query, command)
-    }
 }
 
-impl<T, C> OperationContract<Query, C, T::Res> for T
+impl<T, C> Contract<Query, C> for T
 where
     T: QueryContract<C>,
     C: Serialize + DeserializeOwned,
 {
 }
 
-pub trait MutationContract<C>: OperationContract<Mutation, C, Self::Res>
+pub trait MutationContract<C>: Contract<Mutation, C>
 where
     C: Serialize + DeserializeOwned,
 {
     type Res: Serialize + DeserializeOwned;
-    fn mutation(&self, command: C) -> Result<Self::Res> {
-        self.operation(Mutation, command)
-    }
 }
 
-impl<T, C> OperationContract<Mutation, C, T::Res> for T
+impl<T, C> Contract<Mutation, C> for T
 where
     T: MutationContract<C>,
     C: Serialize + DeserializeOwned,
