@@ -15,7 +15,7 @@ provider "aws" {
 resource "aws_rds_cluster" "tegmen_db" {
   cluster_identifier      = "tegmen"
   engine                  = "aurora-postgresql"
-  engine_mode             = "serverless"
+  engine_mode             = "provisioned"
   availability_zones      = ["us-west-1a", "us-west-1b", "us-west-1a"]
   database_name           = "tegmen"
   master_username         = "root"
@@ -24,9 +24,16 @@ resource "aws_rds_cluster" "tegmen_db" {
   enable_http_endpoint    = true
   preferred_backup_window = "07:00-09:00"
   skip_final_snapshot     = true
-  scaling_configuration {
-    min_capacity = 2
-  }
+}
+
+resource "aws_rds_cluster_instance" "cluster_instances" {
+  count               = 1
+  identifier          = "tegmen-cluster-instance-${count.index}"
+  cluster_identifier  = aws_rds_cluster.tegmen_db.id
+  instance_class      = "db.r5.large"
+  engine              = aws_rds_cluster.tegmen_db.engine
+  engine_version      = aws_rds_cluster.tegmen_db.engine_version
+  publicly_accessible = true
 }
 
 module "temperature_lambda" {
