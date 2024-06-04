@@ -12,7 +12,7 @@ impl Operation for Query {}
 impl Operation for Mutation {}
 
 #[derive(Serialize, Deserialize)]
-pub(crate) struct Payload<O: Operation, C> {
+pub struct Payload<O: Operation, C> {
     operation: O,
     command: C,
 }
