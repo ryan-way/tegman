@@ -21,6 +21,7 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(Temperature::Temperature).float().not_null())
                     .col(ColumnDef::new(Temperature::Humidity).float().not_null())
                     .col(ColumnDef::new(Temperature::Hostname).string().not_null())
+                    .col(ColumnDef::new(Temperature::Date).date_time().not_null())
                     .to_owned(),
             )
             .await
@@ -40,4 +41,5 @@ enum Temperature {
     Temperature,
     Humidity,
     Hostname,
+    Date,
 }
