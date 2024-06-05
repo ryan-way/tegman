@@ -62,10 +62,11 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = data.archive_file.lambda_archive_file.output_base64sha256
   handler          = "bootstrap"
   runtime          = "provided.al2023"
+  timeout          = 3
 
   environment {
     variables = {
-      foo = "bar"
+      DATABASE_URL = "postgres://root:rootroot@tegmen-cluster-instance-0.c7yi6ik0mizh.us-west-1.rds.amazonaws.com:5432/tegmen"
     }
   }
 }
