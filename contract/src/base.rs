@@ -1,7 +1,5 @@
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use crate::util::Result;
-
 #[derive(Serialize, Deserialize)]
 pub(crate) struct Query;
 #[derive(Serialize, Deserialize)]
@@ -28,7 +26,6 @@ pub trait QueryContract<C>
 where
     C: Serialize + DeserializeOwned,
 {
-    type Req: Serialize + DeserializeOwned;
     type Res: Serialize + DeserializeOwned;
 }
 
@@ -43,7 +40,6 @@ pub trait MutationContract<C>: Contract<Mutation, C>
 where
     C: Serialize + DeserializeOwned,
 {
-    type Req: Serialize + DeserializeOwned;
     type Res: Serialize + DeserializeOwned;
 }
 

@@ -1,46 +1,45 @@
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
 
-use crate::util::Result;
-use crate::{
-    base::{MutationContract, QueryContract},
-    Client,
-};
+use crate::base::{MutationContract, QueryContract};
 
 #[derive(Serialize, Deserialize)]
 pub struct ListTemperatures;
 #[derive(Serialize, Deserialize)]
 pub struct LogTemperature {
     pub temperature: f32,
+    pub humidity: f32,
+    pub host_name: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Temperature {
     pub temperature: f32,
     pub humidity: f32,
+    pub host_name: String,
+    pub date: NaiveDateTime,
 }
 
 pub trait ListTemperaturesQuery: QueryContract<ListTemperatures> {
-    fn query(&self, command: Self::Req) -> Result<Self::Res>;
+    type Err;
+    async fn query(&self, command: ListTemperatures) -> Result<Self::Res, Self::Err>;
 }
 
-impl<T, C> QueryContract<C> for T
+impl<T> QueryContract<ListTemperatures> for T
 where
     T: ListTemperaturesQuery,
-    C: Serialize + DeserializeOwned,
 {
-    type Req = ListTemperatures;
     type Res = Vec<Temperature>;
 }
 
 pub trait LogTemperatureMutation: MutationContract<LogTemperature> {
-    fn mutation(&self, command: Self::Req) -> Result<Self::Res>;
+    type Err;
+    async fn mutation(&self, command: LogTemperature) -> Result<Self::Res, Self::Err>;
 }
 
-impl<T, C> MutationContract<C> for T
+impl<T> MutationContract<LogTemperature> for T
 where
     T: LogTemperatureMutation,
-    C: Serialize + DeserializeOwned,
 {
-    type Req = LogTemperature;
     type Res = Temperature;
 }

@@ -4,18 +4,26 @@ pub struct TestClient {}
 
 impl Client for TestClient {}
 impl LogTemperatureMutation for TestClient {
-    fn mutation(&self, command: Self::Req) -> Result<Self::Res> {
+    type Err = ();
+    async fn mutation(&self, command: LogTemperature) -> Result<Self::Res, ()> {
         todo!()
     }
 }
 impl ListTemperaturesQuery for TestClient {
-    fn query(&self, command: Self::Req) -> Result<Self::Res> {
+    type Err = ();
+    async fn query(&self, command: ListTemperatures) -> Result<Self::Res, ()> {
         todo!()
     }
 }
 
-fn test() {
+async fn test() {
     let test = TestClient {};
-    let response = test.query(ListTemperatures);
-    let response = test.mutation(LogTemperature { temperature: 32.0 });
+    let response: Result<Vec<Temperature>, ()> = test.query(ListTemperatures).await;
+    let response: Result<Temperature, ()> = test
+        .mutation(LogTemperature {
+            temperature: 32.0,
+            host_name: "test host".to_owned(),
+            humidity: 50.0,
+        })
+        .await;
 }
