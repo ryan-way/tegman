@@ -30,7 +30,7 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   count               = 1
   identifier          = "tegmen-cluster-instance-${count.index}"
   cluster_identifier  = aws_rds_cluster.tegmen_db.id
-  instance_class      = "db.r5.large"
+  instance_class      = "db.t3.medium"
   engine              = aws_rds_cluster.tegmen_db.engine
   engine_version      = aws_rds_cluster.tegmen_db.engine_version
   publicly_accessible = true

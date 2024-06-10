@@ -3,16 +3,19 @@ extern crate contract;
 extern crate dotenv_codegen;
 
 mod client;
+mod dispatcher;
 mod entity;
 
 use std::time::Duration;
 
-use aws_lambda_events::{
-    apigw::{ApiGatewayProxyRequest, ApiGatewayProxyResponse},
-    event,
-};
+use aws_lambda_events::apigw::{ApiGatewayProxyRequest, ApiGatewayProxyResponse};
 use client::Client;
-use contract::command::{ListTemperatures, ListTemperaturesQuery};
+use contract::{
+    payload::RequestPayload,
+    request::{LogTemperature, Request},
+    Client as ContractClient,
+};
+use dispatcher::Dispatcher;
 use http::HeaderMap;
 use lambda_runtime::{service_fn, Error, LambdaEvent};
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
@@ -23,20 +26,34 @@ async fn handler(
 ) -> Result<ApiGatewayProxyResponse, Error> {
     println!("This is an event: {:?}", event);
     let client = Client::initialize(&connection).await?;
-    let temperatures = client.query(ListTemperatures).await?;
-    println!(
-        "Temperatures {}",
-        serde_json::to_string(&temperatures).unwrap()
-    );
+    let temperatures = client.list_temperatures().await?;
+    println!("Temperatures {}", serde_json::to_string(&temperatures)?);
+    let request = RequestPayload {
+        request: Request::ListTemperatures,
+        operation: contract::operation::Operation::Query,
+    };
+    println!("List Temperature: {}", serde_json::to_string(&request)?);
+    let request = RequestPayload {
+        request: Request::LogTemperature(LogTemperature {
+            temperature: 32.1,
+            humidity: 50.1,
+            host_name: "test host".to_owned(),
+        }),
+        operation: contract::operation::Operation::Mutation,
+    };
+    println!("Log Temperature: {}", serde_json::to_string(&request)?);
     let body = event.payload.body.ok_or("No Body provided")?;
     println!("Body: {}", body);
+    let payload = serde_json::from_str(&body)?;
+    let response = Dispatcher::dispatch(&client, payload).await?;
+    println!("Response: {}", serde_json::to_string(&response)?);
     let mut headers = HeaderMap::new();
-    headers.insert("content-type", "text/html".parse().unwrap());
+    headers.insert("content-type", "text/html".parse()?);
     let resp = ApiGatewayProxyResponse {
         status_code: 200,
         multi_value_headers: headers.clone(),
         is_base64_encoded: false,
-        body: Some("Hello AWS Lambda HTTP request".into()),
+        body: Some(serde_json::to_string(&response)?.into()),
         headers,
     };
     Ok(resp)

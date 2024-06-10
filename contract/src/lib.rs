@@ -1,9 +1,10 @@
-use base::{MutationContract, QueryContract};
-use command::{ListTemperatures, LogTemperature};
-
-mod base;
-pub mod command;
+mod client;
+mod data;
+pub mod operation;
+pub mod payload;
 pub mod prelude;
+pub mod request;
+pub mod response;
 mod test;
 
-pub trait Client: QueryContract<ListTemperatures> + MutationContract<LogTemperature> {}
+pub use client::Client;

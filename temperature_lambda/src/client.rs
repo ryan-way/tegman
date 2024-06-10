@@ -1,14 +1,11 @@
+use crate::entity::temperature::{self, Entity};
 use chrono::NaiveDateTime;
 use contract::prelude::*;
 use lambda_runtime::Error;
 use sea_orm::{
-    prelude::{DateTimeUtc, TimeDate},
     sea_query::{Expr, Query},
-    ActiveModelTrait, Condition, DatabaseConnection, EntityOrSelect, EntityTrait, QueryFilter,
-    QuerySelect, Set,
+    ActiveModelTrait, Condition, DatabaseConnection, EntityTrait, QueryFilter, Set,
 };
-
-use crate::entity::temperature::{self, Entity};
 
 pub struct Client<'a> {
     connection: &'a DatabaseConnection,
@@ -20,13 +17,12 @@ impl<'a> Client<'a> {
     }
 }
 
-impl<'a> LogTemperatureMutation for Client<'a> {
-    type Err = Error;
-    async fn mutation(&self, command: LogTemperature) -> Result<Self::Res, Self::Err> {
+impl<'a> contract::Client<Error> for Client<'a> {
+    async fn log_temperature(&self, temperature: LogTemperature) -> Result<Temperature, Error> {
         let model = temperature::ActiveModel {
-            temperature: Set(command.temperature),
-            humidity: Set(command.humidity),
-            hostname: Set(command.host_name),
+            temperature: Set(temperature.temperature),
+            humidity: Set(temperature.humidity),
+            hostname: Set(temperature.host_name),
             date: Set(NaiveDateTime::default()),
             ..Default::default()
         }
@@ -40,11 +36,7 @@ impl<'a> LogTemperatureMutation for Client<'a> {
             date: model.date,
         })
     }
-}
-
-impl<'a> ListTemperaturesQuery for Client<'a> {
-    type Err = Error;
-    async fn query(&self, command: ListTemperatures) -> Result<Self::Res, Self::Err> {
+    async fn list_temperatures(&self) -> Result<Vec<Temperature>, Error> {
         let subquery = Query::select()
             .column(temperature::Column::Hostname)
             .expr(Expr::col(temperature::Column::Date).max())
@@ -70,5 +62,3 @@ impl<'a> ListTemperaturesQuery for Client<'a> {
             .collect())
     }
 }
-
-impl<'a> contract::Client for Client<'a> {}

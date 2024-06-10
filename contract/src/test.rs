@@ -1,26 +1,34 @@
-use crate::prelude::*;
+use chrono::NaiveDateTime;
+
+use crate::{data::Temperature, prelude::*};
 
 pub struct TestClient {}
 
-impl Client for TestClient {}
-impl LogTemperatureMutation for TestClient {
-    type Err = ();
-    async fn mutation(&self, command: LogTemperature) -> Result<Self::Res, ()> {
-        todo!()
+impl Client<()> for TestClient {
+    async fn list_temperatures(&self) -> Result<Vec<Temperature>, ()> {
+        Ok(vec![Temperature {
+            temperature: 32.0,
+            humidity: 50.1,
+            host_name: "test_host".to_owned(),
+            date: NaiveDateTime::default(),
+        }])
     }
-}
-impl ListTemperaturesQuery for TestClient {
-    type Err = ();
-    async fn query(&self, command: ListTemperatures) -> Result<Self::Res, ()> {
-        todo!()
+
+    async fn log_temperature(&self, temperature: LogTemperature) -> Result<Temperature, ()> {
+        Ok(Temperature {
+            temperature: temperature.temperature,
+            humidity: temperature.humidity,
+            host_name: temperature.host_name,
+            date: NaiveDateTime::default(),
+        })
     }
 }
 
 async fn test() {
     let test = TestClient {};
-    let response: Result<Vec<Temperature>, ()> = test.query(ListTemperatures).await;
+    let response: Result<Vec<Temperature>, ()> = test.list_temperatures().await;
     let response: Result<Temperature, ()> = test
-        .mutation(LogTemperature {
+        .log_temperature(LogTemperature {
             temperature: 32.0,
             host_name: "test host".to_owned(),
             humidity: 50.0,

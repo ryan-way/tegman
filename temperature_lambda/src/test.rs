@@ -62,3 +62,24 @@ static event: LambdaEvent = LambdaEvent {
         } 
       } 
     };
+
+
+static LIST_TEMPERATURES: &str = r#"
+{
+  "request": "ListTemperatures",
+  "operation": "Query"
+}
+"#;
+
+static LOG_TEMPERATURE: &str = r#"
+{
+  "request": {
+      "LogTemperature": {
+          "temperature": 32.1,
+          "humidity": 50.1,
+          "host_name": "test host"
+      }
+  },
+  "operation": "Mutation"
+}
+"#;
