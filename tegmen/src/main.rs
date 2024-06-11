@@ -22,7 +22,7 @@ async fn main() {
     let log_temperature = LogTemperature {
         temperature: convert_to_fahrenheit(temperature_reading.temperature),
         humidity: temperature_reading.humidity,
-        host_name: "testing real data".to_owned(),
+        host_name: hostname::get().unwrap().to_str().unwrap().to_owned(),
     };
     println!("Temperature reading: {:?}", log_temperature);
 
