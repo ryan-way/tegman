@@ -1,5 +1,5 @@
 use crate::entity::temperature::{self, Entity};
-use chrono::NaiveDateTime;
+use chrono::{DateTime, NaiveDateTime, Utc};
 use contract::prelude::*;
 use lambda_runtime::Error;
 use sea_orm::{
@@ -23,7 +23,7 @@ impl<'a> contract::Client<Error> for Client<'a> {
             temperature: Set(temperature.temperature),
             humidity: Set(temperature.humidity),
             hostname: Set(temperature.host_name),
-            date: Set(NaiveDateTime::default()),
+            date: Set(Utc::now().naive_utc()),
             ..Default::default()
         }
         .insert(self.connection)

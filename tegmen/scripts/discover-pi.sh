@@ -4,7 +4,6 @@ echo "searching for pis..."
 
 for i in $(seq 0 20)
 do
-  sleep 15
   COUNT=$(sudo nmap -sP 192.168.4.0/24 | grep Raspberry | wc -l)
   if [[ "$COUNT" == "2" ]]; then
     echo "all pis online"
@@ -14,4 +13,5 @@ do
   else
     echo "searching..."
   fi
+  sleep 15
 done

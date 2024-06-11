@@ -1,4 +1,4 @@
-readonly TARGET_HOST=192.168.4.36
+readonly TARGET_HOST=192.168.4.34
 readonly TARGET_PATH=/home/rway/tegmen
 readonly TARGET_ARCH=arm-unknown-linux-gnueabihf
 readonly SOURCE_PATH=../target/${TARGET_ARCH}/release/tegmen
