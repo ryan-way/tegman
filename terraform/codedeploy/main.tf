@@ -20,6 +20,11 @@ resource "aws_iam_user_policy_attachment" "tegmen_code_deploy_policy" {
   policy_arn = aws_iam_policy.tegmen_code_deploy_policy.arn
 }
 
+resource "aws_iam_user_policy_attachment" "tegmen_cloudwatch_policy" {
+  user       = aws_iam_user.tegmen.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+}
+
 data "aws_iam_policy_document" "deploy_service_role_assume_policy" {
   statement {
     effect = "Allow"
