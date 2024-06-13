@@ -12,29 +12,6 @@ provider "aws" {
   profile = "tegmen"
 }
 
-resource "aws_rds_cluster" "tegmen_db" {
-  cluster_identifier      = "tegmen"
-  engine                  = "aurora-postgresql"
-  engine_mode             = "provisioned"
-  availability_zones      = ["us-west-1a", "us-west-1b", "us-west-1a"]
-  database_name           = "tegmen"
-  master_username         = "root"
-  master_password         = "rootroot"
-  backup_retention_period = 5
-  enable_http_endpoint    = true
-  preferred_backup_window = "07:00-09:00"
-  skip_final_snapshot     = true
-}
-
-resource "aws_rds_cluster_instance" "cluster_instances" {
-  count               = 1
-  identifier          = "tegmen-cluster-instance-${count.index}"
-  cluster_identifier  = aws_rds_cluster.tegmen_db.id
-  instance_class      = "db.t3.medium"
-  engine              = aws_rds_cluster.tegmen_db.engine
-  engine_version      = aws_rds_cluster.tegmen_db.engine_version
-  publicly_accessible = true
-}
 
 module "temperature_lambda" {
   source = "./lambda"
@@ -47,6 +24,63 @@ module "temperature_api" {
   function_name     = module.temperature_lambda.function_name
   lambda_arn        = module.temperature_lambda.arn
   lambda_invoke_arn = module.temperature_lambda.invoke_arn
+}
+
+resource "aws_dynamodb_table" "tegmen-table" {
+  name         = "temperatures"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "Id"
+  range_key    = "Date"
+
+  attribute {
+    name = "Id"
+    type = "S"
+  }
+
+  attribute {
+    name = "Temperature"
+    type = "N"
+  }
+
+  attribute {
+    name = "Humidity"
+    type = "N"
+  }
+
+  attribute {
+    name = "Hostname"
+    type = "S"
+  }
+
+  attribute {
+    name = "Date"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name               = "Temperature"
+    hash_key           = "Id"
+    range_key          = "Temperature"
+    projection_type    = "INCLUDE"
+    non_key_attributes = ["Hostname", "Date"]
+  }
+
+  global_secondary_index {
+    name               = "Humidity"
+    hash_key           = "Id"
+    range_key          = "Humidity"
+    projection_type    = "INCLUDE"
+    non_key_attributes = ["Hostname", "Date"]
+  }
+
+  global_secondary_index {
+    name               = "Hostname"
+    hash_key           = "Hostname"
+    range_key          = "Date"
+    projection_type    = "INCLUDE"
+    non_key_attributes = ["Temperature", "Humidity"]
+
+  }
 }
 
 module "system_controller" {
