@@ -1,27 +1,5 @@
 variable "name" { type = string }
 
-data "aws_iam_policy_document" "logging_policy_document" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-    ]
-
-    resources = ["arn:aws:logs:*:*:*"]
-  }
-}
-
-resource "aws_iam_policy" "lambda_logging_policy" {
-  name        = "${var.name}_lambda_logging"
-  path        = "/"
-  description = "IAM policy for logging from a lambda"
-  policy      = data.aws_iam_policy_document.logging_policy_document.json
-}
-
-
 data "aws_iam_policy_document" "assume_role_policy" {
   statement {
     effect = "Allow"
@@ -38,13 +16,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 resource "aws_iam_role" "lambda_role" {
   name                = "${var.name}_role"
   assume_role_policy  = data.aws_iam_policy_document.assume_role_policy.json
-  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess"]
-}
-
-
-resource "aws_iam_role_policy_attachment" "loggin_policy_attachment" {
-  role       = aws_iam_role.lambda_role.name
-  policy_arn = aws_iam_policy.lambda_logging_policy.arn
+  managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess", "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess", "arn:aws:iam::aws:policy/CloudWatchFullAccess"]
 }
 
 data "archive_file" "lambda_archive_file" {

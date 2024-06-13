@@ -1,4 +1,4 @@
-use chrono::NaiveDateTime;
+use chrono::Utc;
 
 use crate::{data::Temperature, prelude::*};
 
@@ -10,7 +10,7 @@ impl Client<()> for TestClient {
             temperature: 32.0,
             humidity: 50.1,
             host_name: "test_host".to_owned(),
-            date: NaiveDateTime::default(),
+            date: Utc::now(),
         }])
     }
 
@@ -19,7 +19,7 @@ impl Client<()> for TestClient {
             temperature: temperature.temperature,
             humidity: temperature.humidity,
             host_name: temperature.host_name,
-            date: NaiveDateTime::default(),
+            date: Utc::now(),
         })
     }
 }

@@ -27,24 +27,13 @@ module "temperature_api" {
 }
 
 resource "aws_dynamodb_table" "tegmen-table" {
-  name         = "temperatures"
+  name         = "temperature"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "Id"
-  range_key    = "Date"
 
   attribute {
     name = "Id"
     type = "S"
-  }
-
-  attribute {
-    name = "Temperature"
-    type = "N"
-  }
-
-  attribute {
-    name = "Humidity"
-    type = "N"
   }
 
   attribute {
@@ -58,28 +47,10 @@ resource "aws_dynamodb_table" "tegmen-table" {
   }
 
   global_secondary_index {
-    name               = "Temperature"
-    hash_key           = "Id"
-    range_key          = "Temperature"
-    projection_type    = "INCLUDE"
-    non_key_attributes = ["Hostname", "Date"]
-  }
-
-  global_secondary_index {
-    name               = "Humidity"
-    hash_key           = "Id"
-    range_key          = "Humidity"
-    projection_type    = "INCLUDE"
-    non_key_attributes = ["Hostname", "Date"]
-  }
-
-  global_secondary_index {
-    name               = "Hostname"
-    hash_key           = "Hostname"
-    range_key          = "Date"
-    projection_type    = "INCLUDE"
-    non_key_attributes = ["Temperature", "Humidity"]
-
+    name            = "Hostname"
+    hash_key        = "Hostname"
+    range_key       = "Date"
+    projection_type = "ALL"
   }
 }
 

@@ -11,7 +11,9 @@ lambda_runtime = "0.11.2"
 serde = { version = "1.0.203", features = ["serde_derive"] }
 serde_json = "1.0.117"
 tokio = { version = "1.37.0", features = ["full"] }
-sea-orm = { version = "0.12", features = [ "sqlx-postgres", "runtime-tokio-rustls", "macros" ] }
 contract = { path = "../contract"}
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
+aws-config = { version = "1.5.1", features = ["behavior-version-latest"]}
+aws-sdk-dynamodb = "1.33.0"
+uuid = {version = "1.8.0", features = ["v4", "fast-rng"]}
