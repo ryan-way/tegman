@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt update
-      - run: sudo apt -y install gcc-arm-linux-gnueabihf
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: gcc-arm-linux-gnueabihf
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - uses: actions/cache@v4
@@ -20,12 +22,17 @@ jobs:
       - name: cargo build
         working-directory: tegmen
         run: cargo build --release --bin tegmen --target=arm-unknown-linux-gnueabihf
-      - run: ls target/*
-      - uses: actions/upload-artifact@v4
+      - run: zip tegmen.zip target/arm-unknown-linux-gnueabihf/release/tegmen tegmen/crontab
+      - name: Create tag
+        id: tag
         env:
-          ACTIONS_RUNTIME_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          SHA: ${{ github.sha }}
+        run: echo "TAG_NAME=$( echo $SHA | cut -c1-6)" >> $GITHUB_OUTPUT
+      - name: Create Release
+        uses: ncipollo/release-action@v1
         with:
-          name: tegmen-binary
-          path: |
-            target/arm-unknown-linux-gnueabihf/release/tegmen
-            tegmen/crontab
+          artifactContentType: zip
+          generateReleaseNotes: true
+          name: tegmen-${{ steps.tag.outputs.TAG_NAME }}
+          tag: ${{ steps.tag.outputs.TAG_NAME }}
+          artifacts: tegmen.zip
