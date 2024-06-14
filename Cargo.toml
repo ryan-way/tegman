@@ -1,6 +1,6 @@
 [workspace]
 
-members = [ "contract", "migration",
+members = [ "contract",
     "system_controller", "tegmen", "temperature_lambda",
 ]
 
