@@ -24,14 +24,17 @@ impl Client<()> for TestClient {
     }
 }
 
+#[allow(dead_code)]
 async fn test() {
     let test = TestClient {};
-    let response: Result<Vec<Temperature>, ()> = test.list_temperatures().await;
-    let response: Result<Temperature, ()> = test
-        .log_temperature(LogTemperature {
+    println!("Temperatures: {:?}", test.list_temperatures().await);
+    println!(
+        "Temperature: {:?}",
+        test.log_temperature(LogTemperature {
             temperature: 32.0,
             host_name: "test host".to_owned(),
             humidity: 50.0,
         })
-        .await;
+        .await
+    );
 }

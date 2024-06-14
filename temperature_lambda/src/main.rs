@@ -1,6 +1,4 @@
 extern crate contract;
-#[macro_use]
-extern crate dotenv_codegen;
 mod client;
 mod dispatcher;
 mod util;
