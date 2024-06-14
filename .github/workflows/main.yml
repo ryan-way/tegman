@@ -7,6 +7,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - run: apt update
+      - run: apt -y install gcc-arm-linux-gnueabihf
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - uses: actions/cache@v4
@@ -14,5 +16,16 @@ jobs:
         with:
           path: '**/target'
           key: ${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
-      - run: cargo build
+      - run: rustup target add arm-unknown-linux-gnueabihf
+      - name: cargo build
+        working-directory: tegmen
+        run: cargo build --release --bin tegmen --target=arm-unknown-linux-gnueabihf
       - run: ls target/*
+      - uses: actions/upload-artifact@v4
+        env:
+          ACTIONS_RUNTIME_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          name: tegmen-binary
+          path: |
+            target/arm-unknown-linux-gnueabihf/release/tegmen
+            tegmen/crontab
