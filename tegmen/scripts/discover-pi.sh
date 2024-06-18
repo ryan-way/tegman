@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "searching for pis..."
-
 for i in $(seq 0 20)
 do
   COUNT=$(sudo nmap -sP 192.168.4.0/24 | grep Raspberry | wc -l)
@@ -11,7 +9,7 @@ do
   elif [[ "$COUNT" == "1" ]]; then
     echo "one pi online. searching..."
   else
-    echo "searching..."
+    echo "searching for pis..."
   fi
   sleep 15
 done
