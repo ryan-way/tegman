@@ -20,6 +20,8 @@ jobs:
           path: '**/target'
           key: ${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
       - run: rustup target add arm-unknown-linux-gnueabihf
+      - working-directory: tegmen 
+        run: cargo rustc -- --print cfg --target=arm-unknown-linux-gnueabihf
       - name: cargo build release
         working-directory: tegmen
         run: cargo build --release --target=arm-unknown-linux-gnueabihf
