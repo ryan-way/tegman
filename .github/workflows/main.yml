@@ -22,7 +22,7 @@ jobs:
       - run: rustup target add arm-unknown-linux-gnueabihf
       - name: cargo build
         working-directory: tegmen
-        run: cargo build --release --bin tegmen --target=arm-unknown-linux-gnueabihf
+        run: cargo build --release --target=arm-unknown-linux-gnueabihf
       - run: zip tegmen.zip target/arm-unknown-linux-gnueabihf/release/tegmen
       - name: Create tag
         id: tag
