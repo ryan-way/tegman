@@ -37,6 +37,7 @@ jobs:
         with:
           artifactContentType: zip
           generateReleaseNotes: true
+          makeLatest: true
           name: tegmen-${{ steps.tag.outputs.TAG_NAME }}
           tag: ${{ steps.tag.outputs.TAG_NAME }}
           artifacts: tegmen.zip
