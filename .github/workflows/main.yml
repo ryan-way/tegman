@@ -23,7 +23,7 @@ jobs:
       - name: cargo build
         working-directory: tegmen
         run: cargo build --release --bin tegmen --target=arm-unknown-linux-gnueabihf
-      - run: zip tegmen.zip target/arm-unknown-linux-gnueabihf/release/tegmen tegmen/crontab
+      - run: zip tegmen.zip target/arm-unknown-linux-gnueabihf/release/tegmen
       - name: Create tag
         id: tag
         env:

@@ -1,9 +1,12 @@
 version: 0.0
 os: linux 
 files:
-  - source: /
+  - source: target/arm-unknown-linux-gnueabihf/release/tegmen
     destination: /root/tegmen
 hooks:
+  BeforeInstall:
+    - location: tegmen/scripts/before_install.sh
+      runas: root
   AfterInstall:
     - location: tegmen/scripts/after_install.sh
       runas: root
