@@ -1,8 +1,8 @@
 version: 0.0
 os: linux 
 files:
-  - source: /
-    destination: /root/tegmen
+  - source: /tegmen/crontab
+    destination: /root/crontab
 hooks:
   AfterInstall:
     - location: tegmen/scripts/after_install.sh
