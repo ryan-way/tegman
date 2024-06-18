@@ -12,6 +12,7 @@ fn convert_to_fahrenheit(celcius: f32) -> f32 {
 
 #[tokio::main]
 async fn main() {
+    println!("Reading tmperature...");
     let temperature_reading = match read(2) {
         Ok(reading) => reading,
         Err(e) => {
@@ -19,6 +20,7 @@ async fn main() {
             return;
         }
     };
+    println!("Creating DTO...");
     let log_temperature = LogTemperature {
         temperature: convert_to_fahrenheit(temperature_reading.temperature),
         humidity: temperature_reading.humidity,
