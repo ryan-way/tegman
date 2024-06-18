@@ -21,4 +21,4 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 #
 # m h  dom mon dow   command
-* * * * * /root/.cargo/bin/tegmen >> /var/log/tegmen/$(date +\%F-\%H).log
+* * * * * /root/tegmen >> /var/log/tegmen/$(date +\%F-\%H).log
