@@ -25,21 +25,21 @@ jobs:
       - name: cargo build release
         working-directory: tegmen
         run: cargo build --release --target=arm-unknown-linux-gnueabihf
-      - name: cargo build debug
-        working-directory: tegmen
-        run: cargo build --target=arm-unknown-linux-gnueabihf
-      - run: zip tegmen.zip target/arm-unknown-linux-gnueabihf/release/tegmen target/arm-unknown-linux-gnueabihf/debug/tegmen
-      - name: Create tag
-        id: tag
-        env:
-          SHA: ${{ github.sha }}
-        run: echo "TAG_NAME=$( echo $SHA | cut -c1-6)" >> $GITHUB_OUTPUT
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifactContentType: zip
-          generateReleaseNotes: true
-          makeLatest: true
-          name: tegmen-${{ steps.tag.outputs.TAG_NAME }}
-          tag: ${{ steps.tag.outputs.TAG_NAME }}
-          artifacts: tegmen.zip
+      # - name: cargo build debug
+      #   working-directory: tegmen
+      #   run: cargo build --target=arm-unknown-linux-gnueabihf
+      # - run: zip tegmen.zip target/arm-unknown-linux-gnueabihf/release/tegmen target/arm-unknown-linux-gnueabihf/debug/tegmen
+      # - name: Create tag
+      #   id: tag
+      #   env:
+      #     SHA: ${{ github.sha }}
+      #   run: echo "TAG_NAME=$( echo $SHA | cut -c1-6)" >> $GITHUB_OUTPUT
+      # - name: Create Release
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     artifactContentType: zip
+      #     generateReleaseNotes: true
+      #     makeLatest: true
+      #     name: tegmen-${{ steps.tag.outputs.TAG_NAME }}
+      #     tag: ${{ steps.tag.outputs.TAG_NAME }}
+      #     artifacts: tegmen.zip
